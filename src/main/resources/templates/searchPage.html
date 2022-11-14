@@ -1,0 +1,164 @@
+<th:block th:replace="~{mainPageTemplate ::setContent(~{this::content})}">
+    <th:block th:fragment="content">
+        <section>
+            <div class="container py-4 flex-wrap">
+                <div class="row">
+                    <div class="s010">
+                        <form action="/search" method="get">
+                            <div class="inner-form">
+                                <div class="basic-search">
+                                    <div class="input-field">
+                                        <input type="hidden" name="type" value="titleCompanyName">
+                                        <input type="text" style="display:none;"/>
+                                        <input id="search" name="keyword" type="text" placeholder="검색어를 입력해주세요." th:value="${pageRequestDTO.keyword}"/>
+                                        <div class="icon-wrap">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24">
+                                                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="advance-search">
+
+                                    <span class="desc">ADVANCED SEARCH</span>
+
+                                    <div class="row">
+                                        <div class="input-field">
+                                            <div class="input-select">
+                                                <select data-trigger="" id="occSelect" name="filterOccupation">
+                                                    <option placeholder="" value="">직종</option>
+                                                    <th:block th:each="o:${occuAll}">
+                                                        <option th:value="${o}" th:selected="${pageRequestDTO.filterOccupation == o}">[[${o}]]</option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="input-field">
+                                            <div class="input-select">
+                                                <select data-trigger="" id="addSelect" name="filterAddress">
+                                                    <option  value="">지역</option>
+                                                    <option value="서울" th:selected="${pageRequestDTO.filterAddress == '서울'}">서울특별시</option>
+                                                    <option value="경기" th:selected="${pageRequestDTO.filterAddress == '경기'}">경기도</option>
+                                                    <option value="인천" th:selected="${pageRequestDTO.filterAddress == '인천'}">인천광역시</option>
+                                                    <option value="강원" th:selected="${pageRequestDTO.filterAddress == '강원'}">강원도</option>
+                                                    <option value="충남" th:selected="${pageRequestDTO.filterAddress == '충남'}">충청남도</option>
+                                                    <option value="대전" th:selected="${pageRequestDTO.filterAddress == '대전'}">대전광역시</option>
+                                                    <option value="충북" th:selected="${pageRequestDTO.filterAddress == '충북'}">충청북도</option>
+                                                    <option value="세종" th:selected="${pageRequestDTO.filterAddress == '세종'}">세종특별시</option>
+                                                    <option value="부산" th:selected="${pageRequestDTO.filterAddress == '부산'}">부산광역시</option>
+                                                    <option value="울산" th:selected="${pageRequestDTO.filterAddress == '울산'}">울산광역시</option>
+                                                    <option value="대구" th:selected="${pageRequestDTO.filterAddress == '대구'}">대구광역시</option>
+                                                    <option value="경북" th:selected="${pageRequestDTO.filterAddress == '경북'}">경상북도</option>
+                                                    <option value="경남" th:selected="${pageRequestDTO.filterAddress == '경남'}">경상남도</option>
+                                                    <option value="전남" th:selected="${pageRequestDTO.filterAddress == '전남'}">전라남도</option>
+                                                    <option value="광주" th:selected="${pageRequestDTO.filterAddress == '광주'}">광주광역시</option>
+                                                    <option value="전북" th:selected="${pageRequestDTO.filterAddress == '전북'}">전라북도</option>
+                                                    <option value="제주" th:selected="${pageRequestDTO.filterAddress == '제주'}">제주도</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="input-field">
+                                            <div class="input-select">
+                                                <select data-trigger="" id="salarySelect" name="filterSalary">
+                                                    <option placeholder="" value="">연봉</option>
+                                                    <th:block th:each="s:${salaryRange}" >
+                                                        <option th:value="${s}" th:selected="${pageRequestDTO.filterSalary == s}">[[${s}]]</option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row third">
+                                        <div class="input-field">
+                                            <div class="result-count">
+                                                <span>[[${result.totalCount}]] </span>results
+                                            </div>
+                                            <div class="group-btn">
+                                                <button class="btn-delete" id="delete">RESET</button>
+                                                <button type="submit" class="btn-search">SEARCH</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <th:block th:if="${result.totalCount}==0">
+                    <div class="row justify-content-center">
+                        <div class="col-md-6 offset-md-3 row mx-0 text-center" style="height:100px;margin-bottom: 50px">
+                            <h4 class="col-md-12">검색된 결과가 없습니다</h4>
+                            <a href="javascript:void(0);" onclick="postInsertForm.redirectToRegisterPage(searchPage.searchPageUri)"><h4 class="col-md-12"> 새로운 공고 작성</h4></a>
+                        </div>
+
+                    </div>
+                    </th:block>
+                    <th:block th:if="${result.totalCount}!=0">
+                    <div class="row row-cols-1 row-cols-md-4 g-4 p-0 infinite">
+                        <h4 class="col-md-12" style="margin-left: 40px">채용중인 공고</h4>
+                        <th:block th:each="dto:${result.dtoList}">
+                            <div class="post-wrapper">
+                                <div class="col p-0">
+                                    <div class="p-0 m-2 card-css" th:onclick="|javascript:comMyPagePost.readPost('${dto.id}')|" >
+                                        <div class="w-100 p-0 h-50 img-css" >
+                                            <img th:src="@{/post/file/{fileName}(fileName=${dto.attachmentFileName})}" class=" w-100 h-100 card-img-post">
+                                        </div>
+                                        <div class="h-41 align-self-auto pt-3 m-0 card-body-css">
+                                            <p class="card-title-post">[[${dto.title}]]</p>
+                                            <p class="card-company-post">[[${dto.comName}]]</p>
+                                            <p class="card-text-post">연봉 | [[${dto.salaryRange}]]</p>
+                                            <p class="card-text-post">위치 | [[${dto.regionName}]]</p>
+                                            <p class="card-text-post">직종 | [[${dto.occName}]]</p>
+                                            <p class="card-dDay-post">[[${dto.remainDay}]]</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                    </th:block>
+
+                </div>
+
+             </div>
+            </div>
+        </section>
+
+    </th:block>
+</th:block>
+<script>
+    const customSelects = document.querySelectorAll("select");
+    const deleteBtn = document.getElementById('delete')
+    const choices = new Choices('select',
+        {
+            searchEnabled: false,
+            itemSelectText: '',
+            removeItemButton: true,
+        });
+    for (let i = 0; i < customSelects.length; i++)
+    {
+        customSelects[i].addEventListener('addItem', function(event)
+        {
+            if (event.detail.value)
+            {
+                let parent = this.parentNode.parentNode
+                parent.classList.add('valid')
+                parent.classList.remove('invalid')
+            }
+            else
+            {
+                let parent = this.parentNode.parentNode
+                parent.classList.add('invalid')
+                parent.classList.remove('valid')
+            }
+        }, false);
+    }
+    deleteBtn.addEventListener("click", function(e)
+    {
+        e.preventDefault()
+        location.href="/search";
+    });
+    searchPage.init()
+
+</script>
+
